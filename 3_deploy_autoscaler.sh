@@ -1,11 +1,11 @@
 #! /bin/bash
-CLUSTER_NAME=pangeo-esip
+CLUSTER_NAME=hcp-pangeo
 
 export AWS_DEFAULT_PROFILE=circleci
-AUTOSCALER_TEMPLATE=../templates/template-cluster-autoscaler-autodiscovery.yaml
-AUTOSCALER_PERMISSIONS=../templates/template-autoscaler-permissions.json
+AUTOSCALER_TEMPLATE=./templates/template-cluster-autoscaler-autodiscovery.yaml
+AUTOSCALER_PERMISSIONS=./templates/template-autoscaler-permissions.json
 # NOTE: version mappings 1.3.8 : 1.11,   1.12.6 : 1.12,   1.13.5 : 1.13
-AUTOSCALER_VERSION="1.13.5"
+AUTOSCALER_VERSION="1.13.7"
 REGION=$(aws configure get region)
 
 echo "Configuring autoscaling on EKS cluster [$CLUSTER_NAME]..."

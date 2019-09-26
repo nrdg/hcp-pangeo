@@ -1,0 +1,61 @@
+# Used with eksctl version > 1.31
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: CHANGE_CLUSTER_NAME
+  region: CHANGE_REGION
+
+nodeGroups:
+  - name: hub
+    instanceType: m5.large
+    minSize: 1
+    maxSize: 1
+    desiredCapacity: 1
+    volumeSize: 100
+    volumeType: gp2
+    labels:
+      hub.jupyter.org/node-purpose: core
+    #taints:
+    #  special: "true:NoSchedule"
+    ami: auto
+    amiFamily: AmazonLinux2
+    ssh:
+      publicKeyPath: CHANGE_PUBLICKEY
+    iam:
+      withAddonPolicies:
+          autoScaler: true
+  - name: user-notebook
+    instanceType: m5.2xlarge
+    minSize: 0
+    maxSize: 100
+    desiredCapacity: 0
+    volumeSize: 100
+    volumeType: gp2
+    labels:
+      hub.jupyter.org/node-purpose: user
+    ami: auto
+    amiFamily: AmazonLinux2
+    ssh:
+      publicKeyPath: CHANGE_PUBLICKEY
+    iam:
+      withAddonPolicies:
+          autoScaler: true
+          efs: true
+  - name: dask-worker
+    instanceType: r5.2xlarge
+    minSize: 0
+    maxSize: 100
+    volumeSize: 100
+    volumeType: gp2
+    labels:
+      k8s.dask.org/node-purpose: worker
+    desiredCapacity: 0
+    ami: auto
+    amiFamily: AmazonLinux2
+    ssh:
+      publicKeyPath: CHANGE_PUBLICKEY
+    iam:
+      withAddonPolicies:
+          autoScaler: true
+          efs: true

@@ -1,0 +1,80 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: hcp-pangeo
+  region: us-east-1
+
+nodeGroups:
+  - name: core
+    instanceType: m5.large
+    minSize: 1
+    maxSize: 1
+    desiredCapacity: 1
+    volumeSize: 100
+    volumeType: gp2
+    labels:
+      node-role.kubernetes.io/core: core
+      hub.jupyter.org/node-purpose: core
+    ami: auto
+    amiFamily: AmazonLinux2
+    ssh:
+      publicKeyPath: eks-hcp-us-east-1.pub
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        efs: true
+  - name: user
+    instanceType: m5.2xlarge
+    minSize: 0
+    maxSize: 100
+    desiredCapacity: 0
+    volumeSize: 100
+    volumeType: gp2
+    labels:
+      node-role.kubernetes.io/user: user
+      hub.jupyter.org/node-purpose: user
+    taints:
+      hub.jupyter.org/dedicated: 'user:NoSchedule'
+    tags:
+        k8s.io/cluster-autoscaler/node-template/label/hub.jupyter.org/node-purpose: user
+        k8s.io/cluster-autoscaler/node-template/taint/hub.jupyter.org/dedicated: 'user:NoSchedule'
+    ami: auto
+    amiFamily: AmazonLinux2
+    ssh:
+      publicKeyPath: eks-hcp-us-east-1.pub
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::454929164628:policy/hcp-pangeo
+      withAddonPolicies:
+        autoScaler: true
+        efs: true
+  - name: worker
+    instanceType: r5.2xlarge
+    minSize: 0
+    maxSize: 100
+    desiredCapacity: 0
+    volumeSize: 100
+    volumeType: gp2
+    labels:
+      node-role.kubernetes.io/worker: worker
+      k8s.dask.org/node-purpose: worker
+    taints:
+      k8s.dask.org/dedicated: 'worker:NoSchedule'
+    tags:
+        k8s.io/cluster-autoscaler/node-template/label/k8s.dask.org/node-purpose: worker
+        k8s.io/cluster-autoscaler/node-template/taint/k8s.dask.org/dedicated: "worker:NoSchedule"
+    ami: auto
+    amiFamily: AmazonLinux2
+    ssh:
+      publicKeyPath: eks-hcp-us-east-1.pub
+    iam:
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+        - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+        - arn:aws:iam::454929164628:policy/hcp-pangeo
+      withAddonPolicies:
+        autoScaler: true
+        efs: true

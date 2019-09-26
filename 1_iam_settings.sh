@@ -20,7 +20,7 @@
 #aws configure set aws_secret_access_key ${SECRET_KEY}
 
 PROFILE=circleci
-REGION="us-west-2"
+REGION="us-east-1"
 aws configure set region ${REGION} --profile circleci
 aws configure set output json --profile circleci
 

@@ -5,7 +5,7 @@
 
 export AWS_DEFAULT_PROFILE=circleci
 REGION=$(aws configure get region)
-CLUSTER_NAME=pangeo-nasa
+CLUSTER_NAME=hcp-pangeo
 POLICYARN=CHANGE
 #POLICYARN=$(aws iam create-policy --policy-name my-policy --policy-document file://policy)
 

@@ -3,7 +3,7 @@
 # Necessary to set up a hub with NFS home storage
 
 REGION=$(aws configure get region)
-CLUSTER_NAME=pangeo-esip
+CLUSTER_NAME=hcp-pangeo
 
 # Create EFS volume in same VPC as cluster
 echo "Created EKS cluster [$CLUSTER_NAME]. Now adding EFS volume in same VPC..."
